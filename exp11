@@ -1,0 +1,68 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+char input[100];
+int i = 0;
+
+void E();
+void T();
+void F();
+
+void match(char expected) {
+    if (input[i] == expected) {
+        printf("Matched: %c\n", input[i]);
+        i++;
+    } else {
+        printf("Error: Unexpected character '%c'\n", input[i]);
+        exit(1);
+    }
+}
+
+void E() {
+    printf("Processing E (Expression)\n");
+    T();
+    while (input[i] == '+' || input[i] == '-') {
+        printf("Processing Operator: %c\n", input[i]);
+        match(input[i]);
+        T();
+    }
+}
+
+void T() {
+    printf("Processing T (Term)\n");
+    F();
+    while (input[i] == '*' || input[i] == '/') {
+        printf("Processing Operator: %c\n", input[i]);
+        match(input[i]);
+        F();
+    }
+}
+
+void F() {
+    printf("Processing F (Factor)\n");
+    if (input[i] == '(') {
+        printf("Processing Parentheses\n");
+        match('(');
+        E();
+        match(')');
+    } else if (input[i] >= 'a' && input[i] <= 'z') {
+        printf("Processing Operand: %c\n", input[i]);
+        match(input[i]);
+    } else {
+        printf("Error: Invalid character '%c'\n", input[i]);
+        exit(1);
+    }
+}
+
+int main() {
+    printf("Enter an expression: ");
+    scanf("%s", input);
+    E();
+    if (input[i] == '\0') {
+        printf("Parsing successful! Expression follows PEMDAS order.\n");
+    } else {
+        printf("Error: Unexpected characters at the end\n");
+    }
+    return 0;
+}
