@@ -1,0 +1,68 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+char input[100];
+int i = 0, tempVar = 1;
+
+void E();
+void T();
+void F();
+
+void match(char expected) {
+    if (input[i] == expected) {
+        i++;
+    } else {
+        printf("Error: Unexpected character '%c'\n", input[i]);
+        exit(1);
+    }
+}
+
+void E() {
+    T();
+    while (input[i] == '+' || input[i] == '-') {
+        char op = input[i];
+        match(op);
+        printf("t%d = t%d %c t%d\n", tempVar, tempVar - 1, op, tempVar);
+        tempVar++;
+        T();
+    }
+}
+
+void T() {
+    F();
+    while (input[i] == '*' || input[i] == '/') {
+        char op = input[i];
+        match(op);
+        printf("t%d = t%d %c t%d\n", tempVar, tempVar - 1, op, tempVar);
+        tempVar++;
+        F();
+    }
+}
+
+void F() {
+    if (input[i] == '(') {
+        match('(');
+        E();
+        match(')');
+    } else if (input[i] >= 'a' && input[i] <= 'z') {
+        printf("t%d = %c\n", tempVar, input[i]);
+        tempVar++;
+        match(input[i]);
+    } else {
+        printf("Error: Invalid character '%c'\n", input[i]);
+        exit(1);
+    }
+}
+
+int main() {
+    printf("Enter an expression: ");
+    scanf("%s", input);
+    E();
+    if (input[i] == '\0') {
+        printf("Three address code generation successful!\n");
+    } else {
+        printf("Error: Unexpected characters at the end\n");
+    }
+    return 0;
+}
