@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    FILE *file;
+    char filename[100], ch;
+    int whitespace_count = 0, newline_count = 0;
+    
+    // Get the filename from the user
+    printf("Enter the filename: ");
+    scanf("%s", filename);
+    
+    // Open the file in read mode
+    file = fopen(filename, "r");
+    
+    // Check if file exists
+    if (file == NULL) {
+        printf("Error: Could not open file %s\n", filename);
+        return 1;
+    }
+    
+    // Read file character by character
+    while ((ch = fgetc(file)) != EOF) {
+        if (ch == ' ' || ch == '\t') {
+            whitespace_count++;
+        } else if (ch == '\n') {
+            newline_count++;
+        }
+    }
+    
+    // Close the file
+    fclose(file);
+    
+    // Print results
+    printf("Number of whitespaces: %d\n", whitespace_count);
+    printf("Number of newline characters: %d\n", newline_count);
+    
+    return 0;
+}
+//input:C:/Users/HOME/Desktop/ddf.txt
